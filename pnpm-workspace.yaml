@@ -1,8 +1,11 @@
+packages:
+  - ./
+
 ignoredBuiltDependencies:
   - bufferutil
 
-packages:
-  - "./"
+onlyBuiltDependencies:
+  - core-js
 
 overrides:
-  "entities@4.5.0": "6.0.1"
+  entities@4.5.0: 6.0.1

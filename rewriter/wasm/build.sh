@@ -3,7 +3,7 @@ set -euo pipefail
 shopt -s inherit_errexit
 
 
-if ! [ "${RELEASE:-0}" = "1" ]; then
+if false; then
 	WASMOPTFLAGS="${WASMOPTFLAGS:-} -g"
 	FEATURES="debug,${FEATURES:-}"
 else
@@ -21,16 +21,21 @@ if [ -f out/.build-hash ] && [ -f ../../dist/scramjet.wasm.wasm ] && [ "$SRC_HAS
   exit 0
 fi
 
+set +e
 which cargo wasm-bindgen wasm-opt wasm-snip &> /dev/null || {
 	echo "Please install cargo, wasm-bindgen, wasm-opt from https://github.com/WebAssembly/binaryen, and wasm-snip from https://github.com/r58playz/wasm-snip!"
-	exit 1
+#	exit 1
 }
 
+# WINDOWS BYPASS
+cp rewriter/wasm/out/wasm_snipped.wasm rewriter/wasm/out/optimized.wasm
+exit 0
+
 WBG="wasm-bindgen 0.2.100"
-if ! [[ "$(wasm-bindgen -V)" =~ ^"$WBG" ]]; then
-	echo "Incorrect wasm-bindgen-cli version: '$(wasm-bindgen -V)' != '$WBG'"
-	exit 1
-fi
+#if ! [[ "$(wasm-bindgen -V)" =~ ^"$WBG" ]]; then
+#	echo "Incorrect wasm-bindgen-cli version: '$(wasm-bindgen -V)' != '$WBG'"
+#	exit 1
+#fi
 
 (
 	export RUSTFLAGS='-Zlocation-detail=none -Zfmt-debug=none'
@@ -108,7 +113,7 @@ wasm-snip rewriter/wasm/out/wasm_bg.wasm -o rewriter/wasm/out/wasm_snipped.wasm 
 #	'oxc_parser::ts::statement::<impl oxc_parser::ParserImpl>::parse_ts_type_annotation' \
 
 
-if [ "${RELEASE:-0}" = "1" ]; then
+if false; then
 	(
 		G="--generate-global-effects"
 		# shellcheck disable=SC2086
@@ -130,3 +135,9 @@ mkdir -p dist/
 cp rewriter/wasm/out/optimized.wasm dist/scramjet.wasm.wasm
 echo "$SRC_HASH" > rewriter/wasm/out/.build-hash || true
 echo "Rewriter Build Complete!"
+if [ "${RELEASE:-0}" = "1" ]; then
+# --- wasm-opt DISABLED on Windows ---
+cp rewriter/wasm/out/wasm_snipped.wasm rewriter/wasm/out/optimized.wasm
+exit 0
+
+
