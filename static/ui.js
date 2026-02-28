@@ -17,7 +17,7 @@ const scramjet = new ScramjetController({
 scramjet.init();
 navigator.serviceWorker.register("./sw.js", { scope: "./" });
 
-const connection = new BareMux.BareMuxConnection("/baremux/worker.js");
+const connection = new BareMux.BareMuxConnection("./baremux/worker.js");
 const flex = css`
 	display: flex;
 `;
