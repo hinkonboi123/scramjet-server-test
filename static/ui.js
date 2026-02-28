@@ -1,11 +1,12 @@
 const { ScramjetController } = $scramjetLoadController();
 
 const scramjet = new ScramjetController({
-	files: {
-		wasm: "/scram/scramjet.wasm.wasm",
-		all: "/scram/scramjet.all.js",
-		sync: "/scram/scramjet.sync.js",
-	},
+    prefix: "/scramjet-server-test/scramjet/",
+    files: {
+        wasm: "/scramjet-server-test/scram/scramjet.wasm.wasm",
+        all: "/scramjet-server-test/scram/scramjet.all.js",
+        sync: "/scramjet-server-test/scram/scramjet.sync.js",
+    },
 	flags: {
 		rewriterLogs: false,
 		scramitize: false,
